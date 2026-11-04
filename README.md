@@ -37,19 +37,9 @@ QA Explorer does not guarantee that every defect will be found. Its output is a 
 
 ## How it works
 
-```mermaid
-flowchart TD
-    A[QA engineer] --> B[QA Explorer custom agent]
-    B --> C[Chrome DevTools MCP]
-    C --> D[Visible Chrome browser]
-    D --> E[Website under test]
-    C --> F[Browser evidence]
-    F --> B
-    B --> G[HTML and JSON QA report]
-    G -. Human-approved findings .-> H[Optional Atlassian MCP and Jira]
-```
+![QA Explorer high-level architecture](docs/images/qa-explorer-architecture.png)
 
-The agent plans and interprets the assessment. Chrome DevTools MCP provides browser control and evidence such as page state, screenshots, console messages and network activity. Jira publication remains optional and requires an explicit user request.
+QA Explorer uses GitHub Copilot for test planning, reasoning and defect analysis. Chrome DevTools MCP controls the Chrome browser and collects evidence such as screenshots, console errors and HTTP failures. Confirmed findings are compiled into an HTML and JSON report. In a future phase, selected findings can be converted into Jira tickets through Atlassian MCP after human approval.
 
 ## Required repository structure
 
