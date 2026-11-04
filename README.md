@@ -1,6 +1,8 @@
 # QA Explorer
 
-Browser-based QA assessment using **GitHub Copilot** and **Chrome DevTools MCP**.
+QA Explorer is a reusable GitHub Copilot custom agent for browser-based website assessment. Give it a URL, choose a testing depth, provide a safe test account when required, and it uses Chrome DevTools MCP to explore the application, inspect browser signals, confirm defects, capture evidence and generate a professional HTML report.
+
+This repository is intentionally separate from the application repository. QA Explorer should assess the target as a black-box website through its URL rather than reading the application's source code or a private defect checklist.
 
 QA Explorer can:
 
