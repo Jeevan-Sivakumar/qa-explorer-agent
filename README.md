@@ -79,7 +79,7 @@ reports/<run-id>/
 
 ## Prerequisites
 
-Each colleague needs:
+User needs:
 
 - Visual Studio Code with GitHub Copilot Chat access.
 - A supported version of Chrome.
