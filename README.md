@@ -201,6 +201,7 @@ Open `report.html` to review the generated report.
 Atlassian MCP is not required for testing or report generation.
 
 You can configure an Atlassian MCP server in VS Code to connect QA Explorer with Jira. After the assessment, it can use the confirmed findings in the report to create Jira tickets when needed.
+
 ---
 
 # Project Structure
