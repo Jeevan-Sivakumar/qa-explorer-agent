@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA Assessment - 20261102-131830</title>
+  <style>
+    body{font:14px/1.6 Segoe UI,Arial,sans-serif;background:#f3f5f9;margin:0;color:#1f2d40}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .card{background:#fff;border:1px solid #dce3ec;border-radius:10px;padding:18px;margin-bottom:14px}
+    h1,h2,h3{margin:0 0 10px;color:#101d32}
+    table{width:100%;border-collapse:collapse} th,td{border:1px solid #dce3ec;padding:8px;vertical-align:top;text-align:left}
+    th{background:#eef3fb}
+    .tag{padding:2px 8px;border-radius:999px;font-size:12px}
+    .pass{background:#eaf7ef;color:#15613e}.fail{background:#fdeced;color:#ac2634}
+    .gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    figure{margin:0;border:1px solid #dce3ec;border-radius:8px;overflow:hidden;background:#fff}
+    img{width:100%;display:block}
+    figcaption{padding:8px;color:#5d6b7e;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Assessment report</h1>
+      <p>Target: <a href="http://localhost:3000">http://localhost:3000</a></p>
+      <p>Run ID: 20261102-131830 | Started: 2026-11-02T13:18:30+08:00 | Finished: 2026-11-02T13:20:27+08:00</p>
+      <p>Verdict: <strong>partial with confirmed defects</strong></p>
+      <p>Checks: 9 total (pass 5, fail 4, blocked 0)</p>
+    </div>
+
+    <div class="card">
+      <h2>Coverage matrix</h2>
+      <table>
+        <thead><tr><th>ID</th><th>Feature</th><th>Expected</th><th>Actual</th><th>Outcome</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td>CHECK-001</td><td>Home load</td><td>Loads</td><td>Loaded</td><td><span class="tag pass">pass</span></td><td>EV-001</td></tr>
+          <tr><td>CHECK-002</td><td>Saved nav mouse</td><td>Navigates</td><td>Click timeout</td><td><span class="tag fail">fail</span></td><td>EV-006</td></tr>
+          <tr><td>CHECK-003</td><td>Saved nav keyboard</td><td>Navigates</td><td>Reached #/saved</td><td><span class="tag pass">pass</span></td><td>EV-002</td></tr>
+          <tr><td>CHECK-004</td><td>Price sort low-high</td><td>Ascending</td><td>890, 680, 1480, 780</td><td><span class="tag fail">fail</span></td><td>EV-003</td></tr>
+          <tr><td>CHECK-005</td><td>Detail link mouse</td><td>Opens detail</td><td>Click timeout</td><td><span class="tag fail">fail</span></td><td>EV-006</td></tr>
+          <tr><td>CHECK-006</td><td>Detail link keyboard</td><td>Opens detail</td><td>Reached #/hotel/the-anda</td><td><span class="tag pass">pass</span></td><td>EV-004</td></tr>
+          <tr><td>CHECK-007</td><td>Reservation CTA mouse</td><td>Opens checkout</td><td>Click timeout</td><td><span class="tag fail">fail</span></td><td>EV-006</td></tr>
+          <tr><td>CHECK-008</td><td>Reservation CTA keyboard</td><td>Opens checkout</td><td>Reached #/checkout</td><td><span class="tag pass">pass</span></td><td>EV-004</td></tr>
+          <tr><td>CHECK-009</td><td>Mobile sample</td><td>CTA visible</td><td>Visible</td><td><span class="tag pass">pass</span></td><td>EV-005</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Confirmed findings</h2>
+      <h3>QA-001: Mouse activation fails on primary links and buttons (high)</h3>
+      <p>Clicks on Saved stays, Explore stay, and Continue to reservation timed out. Keyboard activation succeeded for equivalent controls.</p>
+      <h3>QA-002: Price low-to-high sort is not ascending (medium)</h3>
+      <p>Observed top visible nightly prices in non-ascending order: 890, 680, 1480, 780.</p>
+    </div>
+
+    <div class="card">
+      <h2>Evidence gallery</h2>
+      <div class="gallery">
+        <figure><img src="evidence/screenshots/SHOT-001-overview-desktop.png" alt="Desktop overview"><figcaption>EV-001 desktop overview</figcaption></figure>
+        <figure><img src="evidence/screenshots/SHOT-002-saved-page.png" alt="Saved page"><figcaption>EV-002 saved page via keyboard</figcaption></figure>
+        <figure><img src="evidence/screenshots/SHOT-003-sort-low-to-high-state.png" alt="Sort state"><figcaption>EV-003 low-to-high sort state</figcaption></figure>
+        <figure><img src="evidence/screenshots/SHOT-004-detail-reservation-cta.png" alt="Detail CTA"><figcaption>EV-004 detail and reservation CTA</figcaption></figure>
+        <figure><img src="evidence/screenshots/SHOT-005-home-mobile.png" alt="Mobile home"><figcaption>EV-005 mobile sample</figcaption></figure>
+      </div>
+      <p>Keep the evidence folder with this HTML for images to load.</p>
+    </div>
+  </div>
+</body>
+</html>

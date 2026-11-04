@@ -1,0 +1,5 @@
+﻿Run ID: 20261104-101716-z92n
+Started: 2026-11-04T10:17:16.6638341+08:00
+Finished: 2026-11-04T10:20:30.6457042+08:00
+Mode: extensive
+Summary: 2 confirmed defects, 1 pass, 1 not tested.

@@ -1,0 +1,415 @@
+{
+  "run_id": "20261102-123746",
+  "url": "http://localhost:3000/",
+  "started_at": "2026-11-02T12:37:46+08:00",
+  "finished_at": "2026-11-02T12:46:41+08:00",
+  "environment": "Windows; Playwright-controlled browser in VS Code; desktop 1440x900 and mobile sample 390x844; normal network/CPU",
+  "verdict": "partial pass with major usability defects",
+  "assessment_status": "partial",
+  "evidence_status": "complete",
+  "coverage": [
+    {
+      "id": "CHECK-001",
+      "phase": "smoke",
+      "feature": "Landing page availability",
+      "input": "Open http://localhost:3000/",
+      "expected": "Home page loads with primary navigation and listings",
+      "expected_basis": "Core app entry behavior",
+      "actual": "Page loaded with nav, search controls, and collection cards",
+      "outcome": "pass",
+      "evidence": ["EV-001"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-002",
+      "phase": "smoke",
+      "feature": "Top-nav mouse interaction",
+      "input": "Click `Saved stays` in header",
+      "expected": "Link activates and navigates",
+      "expected_basis": "Standard clickable link behavior",
+      "actual": "Repeated click timeout; header intercepted pointer events",
+      "outcome": "fail",
+      "evidence": ["EV-010"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-003",
+      "phase": "smoke",
+      "feature": "Saved route access via keyboard",
+      "input": "Focus and press Enter on `Saved stays`",
+      "expected": "Navigate to saved area (or login gate)",
+      "expected_basis": "Keyboard activation parity",
+      "actual": "Navigation path worked and redirected to login when unauthenticated",
+      "outcome": "pass",
+      "evidence": ["EV-002"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-004",
+      "phase": "smoke",
+      "feature": "Login CTA mouse interaction",
+      "input": "Click `Continue as demo guest`",
+      "expected": "Demo session starts",
+      "expected_basis": "Primary login CTA behavior",
+      "actual": "Click timed out; login layout intercepted pointer events",
+      "outcome": "fail",
+      "evidence": ["EV-002"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-005",
+      "phase": "smoke",
+      "feature": "Login CTA keyboard interaction",
+      "input": "Focus and press Enter on demo button",
+      "expected": "Demo session starts",
+      "expected_basis": "Keyboard activation of button",
+      "actual": "Session started; authenticated nav appeared",
+      "outcome": "pass",
+      "evidence": ["EV-003"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-006",
+      "phase": "exploratory",
+      "feature": "Collection filter",
+      "input": "Toggle `With a pool`",
+      "expected": "Pool-only stays shown",
+      "expected_basis": "Filter label semantics",
+      "actual": "Visible cards changed from 8 to 4",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-007",
+      "phase": "exploratory",
+      "feature": "Sort by price ascending",
+      "input": "Set `Sort by` to `Price: low to high`",
+      "expected": "Cards ordered by ascending nightly price",
+      "expected_basis": "Sort option text",
+      "actual": "Order not ascending (e.g., RM 890 shown before RM 680 and RM 780)",
+      "outcome": "fail",
+      "evidence": ["EV-004"],
+      "finding_ids": ["QA-002"]
+    },
+    {
+      "id": "CHECK-008",
+      "phase": "smoke",
+      "feature": "Hotel detail navigation",
+      "input": "Open `The Anda` detail",
+      "expected": "Detail page with room and price breakdown",
+      "expected_basis": "Core browse-to-detail journey",
+      "actual": "Detail page loaded with pricing and reservation form",
+      "outcome": "pass",
+      "evidence": ["EV-011"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-009",
+      "phase": "exploratory",
+      "feature": "Valid promo behavior",
+      "input": "Enter `STAY10`",
+      "expected": "Discount applied and totals recalculated",
+      "expected_basis": "On-page promo instruction",
+      "actual": "Promotion value became -RM 267.00 and total updated to RM 2,595.24",
+      "outcome": "pass",
+      "evidence": ["EV-011"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-010",
+      "phase": "exploratory",
+      "feature": "Invalid promo handling",
+      "input": "Enter `PAST20`",
+      "expected": "Request rejected with user-visible validation message",
+      "expected_basis": "On-page note says PAST20 is expired",
+      "actual": "Alert displayed invalid/expired message with HTTP 422 reference",
+      "outcome": "pass",
+      "evidence": ["EV-007", "EV-008"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-011",
+      "phase": "smoke",
+      "feature": "Reservation CTA mouse interaction",
+      "input": "Click `Continue to reservation`",
+      "expected": "Proceed to checkout",
+      "expected_basis": "Primary conversion CTA",
+      "actual": "Click timed out; surrounding content intercepted pointer events",
+      "outcome": "fail",
+      "evidence": ["EV-010"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-012",
+      "phase": "smoke",
+      "feature": "Checkout and booking",
+      "input": "Keyboard progression, then submit with synthetic guest data",
+      "expected": "Booking confirmed and visible in bookings",
+      "expected_basis": "Core booking flow",
+      "actual": "Redirected to bookings; confirmed reservation displayed with reference",
+      "outcome": "pass",
+      "evidence": ["EV-006"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-013",
+      "phase": "exploratory",
+      "feature": "Cancellation CTA mouse interaction",
+      "input": "Click `Cancel reservation`",
+      "expected": "Cancellation confirm flow starts",
+      "expected_basis": "Visible button behavior",
+      "actual": "Click timed out; booking panel/image intercepted pointer events",
+      "outcome": "fail",
+      "evidence": ["EV-010"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-014",
+      "phase": "exploratory",
+      "feature": "Cancellation lifecycle",
+      "input": "Keyboard activate cancel and accept confirm dialog",
+      "expected": "Reservation changes to cancelled with refund indication",
+      "expected_basis": "Dialog text and cancellation workflow",
+      "actual": "Reservation marked cancelled and refund issued text shown",
+      "outcome": "pass",
+      "evidence": ["EV-006"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-015",
+      "phase": "exploratory",
+      "feature": "Mobile responsive sample",
+      "input": "Viewport 390x844 on home",
+      "expected": "Primary nav and CTA remain visible/reachable",
+      "expected_basis": "Responsive behavior expectation",
+      "actual": "Main navigation visible and `Find a stay` button present",
+      "outcome": "pass",
+      "evidence": ["EV-005"],
+      "finding_ids": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-001",
+      "title": "Mouse clicks fail on multiple primary controls due pointer interception",
+      "status": "confirmed",
+      "category": "functional-usability",
+      "severity": "high",
+      "severity_rationale": "Primary booking and account-entry actions are not operable by standard mouse click across multiple pages.",
+      "impact": "Mouse users may be blocked from login, navigation, reservation continuation, and cancellation actions.",
+      "url": "http://localhost:3000/",
+      "preconditions": [
+        "App loaded in desktop viewport",
+        "Any page with target controls visible"
+      ],
+      "steps": [
+        "Open home page and click `Saved stays` in header",
+        "Open login page and click `Continue as demo guest`",
+        "Open hotel detail and click `Continue to reservation`",
+        "Open bookings and click `Cancel reservation`"
+      ],
+      "expected": "Each visible link/button should activate on mouse click.",
+      "expected_basis": "Standard web interaction model and UI affordances.",
+      "actual": "Click attempts timed out repeatedly; overlapping container elements intercepted pointer events.",
+      "comparison": "Keyboard focus + Enter succeeded for the same controls in several cases.",
+      "attempts": 6,
+      "reproduced": 6,
+      "confidence": "high",
+      "network": [],
+      "evidence": ["EV-002", "EV-003", "EV-006", "EV-010"],
+      "recommendation": "Review stacking context and pointer-events behavior for interactive controls and overlapping containers; add E2E checks for click hit-target integrity.",
+      "jira_url": null
+    },
+    {
+      "id": "QA-002",
+      "title": "`Price: low to high` does not produce ascending order",
+      "status": "confirmed",
+      "category": "functional-data-ordering",
+      "severity": "medium",
+      "severity_rationale": "Users can still browse properties, but pricing sort order is materially misleading for decision-making.",
+      "impact": "Users may select more expensive stays first despite requesting ascending price sort.",
+      "url": "http://localhost:3000/#/",
+      "preconditions": [
+        "On discover page with list visible",
+        "Pool filter active during sampled run"
+      ],
+      "steps": [
+        "Open discover list",
+        "Set sort to `Price: low to high`",
+        "Review visible nightly prices from top to bottom"
+      ],
+      "expected": "Visible order should be ascending by numeric nightly rate.",
+      "expected_basis": "Sort option label and common booking UX semantics.",
+      "actual": "Observed ordering was not ascending (e.g., RM 890 before RM 680 and RM 780).",
+      "comparison": null,
+      "attempts": 1,
+      "reproduced": 1,
+      "confidence": "medium-high",
+      "network": [],
+      "evidence": ["EV-004"],
+      "recommendation": "Validate sort comparator and ensure numeric normalization before ordering rendered cards.",
+      "jira_url": null
+    }
+  ],
+  "inventory": [
+    "Routes: #/, #/login, #/saved, #/hotel/the-anda, #/checkout, #/bookings, #/receipt/<id>, #/account/profile, #/policies",
+    "Filters/options discovered: destination (5), guests (6), pool toggle (2), sort (3), payment simulation (2)",
+    "Core flows discovered: browse/filter/sort, detail pricing, promo validation, checkout booking, cancellation"
+  ],
+  "network": [
+    {
+      "action": "Enter expired promo code PAST20 and blur field",
+      "method": null,
+      "endpoint": "not exported",
+      "status": 422,
+      "duration_ms": null,
+      "reference_ids": [
+        "06c50f81-e09e-40d1-bfc3-35a7cb064bae",
+        "f11d3ec0-264e-4128-945b-31164905b772"
+      ],
+      "notes": "UI alert and console message confirmed validation rejection."
+    }
+  ],
+  "console": [
+    {
+      "context": "Invalid promo submission",
+      "level": "error",
+      "message": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+      "related_check": "CHECK-010"
+    }
+  ],
+  "performance": [
+    {
+      "scope": "No dedicated trace run",
+      "samples": null,
+      "result": "No quantified performance assessment completed in this run."
+    }
+  ],
+  "accessibility": [
+    {
+      "scope": "Keyboard operability sample",
+      "observation": "Keyboard activation was often successful where mouse activation failed, indicating inconsistent pointer hit-target behavior.",
+      "compliance_claim": "No WCAG compliance claim made."
+    }
+  ],
+  "observations": [
+    "Primary booking journey can complete with keyboard and synthetic payment success path.",
+    "Expired promo handling is explicit and user-facing with status reference.",
+    "Mouse hit testing appears unreliable across multiple pages and controls."
+  ],
+  "evidence": [
+    {
+      "id": "EV-001",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-001-overview-desktop.png",
+      "caption": "Desktop home overview",
+      "url": "http://localhost:3000/",
+      "captured_at": "2026-11-02T12:38:27+08:00",
+      "related": ["CHECK-001"]
+    },
+    {
+      "id": "EV-002",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-002-login-page.png",
+      "caption": "Login page and demo guest CTA",
+      "url": "http://localhost:3000/#/login",
+      "captured_at": "2026-11-02T12:40:00+08:00",
+      "related": ["CHECK-004", "QA-001"]
+    },
+    {
+      "id": "EV-003",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-003-saved-empty.png",
+      "caption": "Saved stays page after keyboard-authenticated access",
+      "url": "http://localhost:3000/#/saved",
+      "captured_at": "2026-11-02T12:40:00+08:00",
+      "related": ["CHECK-005", "CHECK-007"]
+    },
+    {
+      "id": "EV-004",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-004-pool-filter-sort-asc.png",
+      "caption": "Pool-filtered list under `Price: low to high` showing non-ascending order",
+      "url": "http://localhost:3000/#/",
+      "captured_at": "2026-11-02T12:41:00+08:00",
+      "related": ["CHECK-006", "CHECK-007", "QA-002"]
+    },
+    {
+      "id": "EV-005",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-005-home-mobile.png",
+      "caption": "Mobile viewport sample at 390x844",
+      "url": "http://localhost:3000/#/",
+      "captured_at": "2026-11-02T12:44:00+08:00",
+      "related": ["CHECK-015"]
+    },
+    {
+      "id": "EV-006",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-006-bookings-cancelled.png",
+      "caption": "Bookings page showing cancelled reservation and refund",
+      "url": "http://localhost:3000/#/bookings",
+      "captured_at": "2026-11-02T12:44:00+08:00",
+      "related": ["CHECK-012", "CHECK-014"]
+    },
+    {
+      "id": "EV-007",
+      "type": "log",
+      "path": "evidence/console/console-observations.md",
+      "caption": "Console observations including 422 error during invalid promo",
+      "url": "http://localhost:3000/#/hotel/the-anda",
+      "captured_at": null,
+      "related": ["CHECK-010"]
+    },
+    {
+      "id": "EV-008",
+      "type": "log",
+      "path": "evidence/network/network-observations.md",
+      "caption": "Network observations for promo validation",
+      "url": "http://localhost:3000/#/hotel/the-anda",
+      "captured_at": null,
+      "related": ["CHECK-010"]
+    },
+    {
+      "id": "EV-009",
+      "type": "log",
+      "path": "execution-log.md",
+      "caption": "Step-by-step execution ledger",
+      "url": "http://localhost:3000/",
+      "captured_at": null,
+      "related": ["CHECK-001", "CHECK-015"]
+    },
+    {
+      "id": "EV-010",
+      "type": "tool-output",
+      "path": "execution-log.md",
+      "caption": "Click timeout records showing pointer interception on multiple controls",
+      "url": "http://localhost:3000/",
+      "captured_at": null,
+      "related": ["QA-001"]
+    },
+    {
+      "id": "EV-011",
+      "type": "tool-output",
+      "path": "execution-log.md",
+      "caption": "Pricing and promo recalculation observations",
+      "url": "http://localhost:3000/#/hotel/the-anda",
+      "captured_at": null,
+      "related": ["CHECK-008", "CHECK-009"]
+    }
+  ],
+  "limitations": [
+    "Assessment duration was shorter than the nominal 30-minute budget.",
+    "Some finite option sets were only partially exercised (destination, guests, sort highest rated, declined payment path).",
+    "Full raw request/response export was not captured for network observations.",
+    "Template file `templates/report-template.html` appears truncated in this workspace; report used available CSS and recorded structure requirements."
+  ],
+  "next_checks": [
+    "Retest all primary CTAs after pointer-interception fix using mouse-only path.",
+    "Execute full combinational sample across destination and sort options.",
+    "Exercise declined payment path and verify booking non-creation behavior.",
+    "Exercise receipt page and policy/account routes for navigation and content integrity.",
+    "Add reproducible automated UI checks for clickability and sort correctness."
+  ]
+}

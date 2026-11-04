@@ -1,0 +1,295 @@
+{
+  "run_id": "20261102-131830",
+  "url": "http://localhost:3000",
+  "started_at": "2026-11-02T13:18:30+08:00",
+  "finished_at": "2026-11-02T13:20:27+08:00",
+  "environment": "Windows, VS Code Playwright-controlled browser, desktop 1440x900 and mobile sample 390x844, normal network/CPU",
+  "verdict": "partial with confirmed defects",
+  "assessment_status": "partial",
+  "evidence_status": "complete",
+  "coverage": [
+    {
+      "id": "CHECK-001",
+      "phase": "smoke",
+      "feature": "Landing page",
+      "input": "Open target URL",
+      "expected": "Home loads with navigation and list",
+      "expected_basis": "Core entry flow",
+      "actual": "Loaded successfully",
+      "outcome": "pass",
+      "evidence": ["EV-001"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-002",
+      "phase": "smoke",
+      "feature": "Saved navigation (mouse)",
+      "input": "Click Saved stays in top nav",
+      "expected": "Navigates to saved route",
+      "expected_basis": "Standard link behavior",
+      "actual": "Click timed out",
+      "outcome": "fail",
+      "evidence": ["EV-006"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-003",
+      "phase": "smoke",
+      "feature": "Saved navigation (keyboard)",
+      "input": "Focus Saved stays and press Enter",
+      "expected": "Navigates to saved route",
+      "expected_basis": "Keyboard parity",
+      "actual": "Navigation succeeded",
+      "outcome": "pass",
+      "evidence": ["EV-002"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-004",
+      "phase": "exploratory",
+      "feature": "Price sorting",
+      "input": "Sort by Price: low to high",
+      "expected": "Ascending nightly rates",
+      "expected_basis": "Sort option semantics",
+      "actual": "Observed order: 890, 680, 1480, 780",
+      "outcome": "fail",
+      "evidence": ["EV-003"],
+      "finding_ids": ["QA-002"]
+    },
+    {
+      "id": "CHECK-005",
+      "phase": "smoke",
+      "feature": "Detail navigation (mouse)",
+      "input": "Click Explore stay",
+      "expected": "Opens hotel detail",
+      "expected_basis": "Primary list-to-detail action",
+      "actual": "Click timed out",
+      "outcome": "fail",
+      "evidence": ["EV-006"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-006",
+      "phase": "smoke",
+      "feature": "Detail navigation (keyboard)",
+      "input": "Focus hotel link and press Enter",
+      "expected": "Opens hotel detail",
+      "expected_basis": "Keyboard parity",
+      "actual": "Opened #/hotel/the-anda",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-007",
+      "phase": "smoke",
+      "feature": "Reservation CTA (mouse)",
+      "input": "Click Continue to reservation",
+      "expected": "Opens checkout",
+      "expected_basis": "Primary conversion action",
+      "actual": "Click timed out",
+      "outcome": "fail",
+      "evidence": ["EV-006"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-008",
+      "phase": "smoke",
+      "feature": "Reservation CTA (keyboard)",
+      "input": "Focus CTA and press Enter",
+      "expected": "Opens checkout",
+      "expected_basis": "Keyboard parity",
+      "actual": "Opened #/checkout",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-009",
+      "phase": "exploratory",
+      "feature": "Mobile sample",
+      "input": "390x844 home viewport",
+      "expected": "Primary CTA visible",
+      "expected_basis": "Responsive usability sample",
+      "actual": "Find a stay CTA visible",
+      "outcome": "pass",
+      "evidence": ["EV-005"],
+      "finding_ids": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-001",
+      "title": "Mouse activation fails on primary links and buttons",
+      "status": "confirmed",
+      "category": "functional-usability",
+      "severity": "high",
+      "severity_rationale": "Primary navigation and booking actions fail for mouse users in sampled paths.",
+      "impact": "Users may be blocked from key flows unless they switch to keyboard interaction.",
+      "url": "http://localhost:3000",
+      "preconditions": [
+        "App loaded",
+        "Control visible"
+      ],
+      "steps": [
+        "Click Saved stays",
+        "Click Explore stay",
+        "Click Continue to reservation"
+      ],
+      "expected": "Clicks should activate visible controls.",
+      "expected_basis": "Standard web UI behavior.",
+      "actual": "Repeated click timeout failures were observed.",
+      "comparison": "Keyboard activation succeeded for equivalent controls.",
+      "attempts": 3,
+      "reproduced": 3,
+      "confidence": "high",
+      "network": [],
+      "evidence": ["EV-002", "EV-004", "EV-006"],
+      "recommendation": "Investigate layering/pointer hit testing and add E2E clickability checks for critical controls.",
+      "jira_url": null
+    },
+    {
+      "id": "QA-002",
+      "title": "Price low-to-high sort is not ascending",
+      "status": "confirmed",
+      "category": "functional-data-ordering",
+      "severity": "medium",
+      "severity_rationale": "Sorting by price gives incorrect order, impacting selection quality.",
+      "impact": "Users may not see cheapest suitable stays first.",
+      "url": "http://localhost:3000/#/",
+      "preconditions": [
+        "Discover list visible"
+      ],
+      "steps": [
+        "Set sort to Price: low to high",
+        "Read top visible nightly prices"
+      ],
+      "expected": "Ascending numeric order",
+      "expected_basis": "Sort label",
+      "actual": "Top four prices were 890, 680, 1480, 780",
+      "comparison": null,
+      "attempts": 1,
+      "reproduced": 1,
+      "confidence": "high",
+      "network": [],
+      "evidence": ["EV-003"],
+      "recommendation": "Validate comparator logic and ensure numeric sort uses normalized values.",
+      "jira_url": null
+    }
+  ],
+  "inventory": [
+    "Routes: #/, #/saved, #/hotel/the-anda, #/checkout, #/bookings, #/account/profile, #/policies",
+    "Finite controls: destination(5), guests(6), sort(3), payment simulation(2), stay selector(8)",
+    "Sampled flows: home, saved, detail, checkout entry, mobile home"
+  ],
+  "network": [
+    {
+      "action": "Sampled route/action transitions",
+      "method": null,
+      "endpoint": null,
+      "status": null,
+      "duration_ms": null,
+      "reference_ids": [],
+      "notes": "No explicit network failure captured in this run."
+    }
+  ],
+  "console": [
+    {
+      "context": "Sampled interactions",
+      "level": "info",
+      "message": "No console messages observed.",
+      "related_check": null
+    }
+  ],
+  "performance": [
+    {
+      "scope": "No dedicated performance trace",
+      "samples": null,
+      "result": "Performance not benchmarked in this run."
+    }
+  ],
+  "accessibility": [
+    {
+      "scope": "Keyboard operability sample",
+      "observation": "Keyboard path succeeded where mouse activation failed in sampled controls.",
+      "compliance_claim": "No WCAG compliance claim."
+    }
+  ],
+  "observations": [
+    "Session starts authenticated in this environment.",
+    "Mouse-interaction failures are reproducible on critical controls.",
+    "Checkout route remains reachable via keyboard path."
+  ],
+  "evidence": [
+    {
+      "id": "EV-001",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-001-overview-desktop.png",
+      "caption": "Desktop home overview",
+      "page_url": "http://localhost:3000/",
+      "captured_at": "2026-11-02T13:18:47+08:00",
+      "related_check_ids": ["CHECK-001"],
+      "related_finding_ids": []
+    },
+    {
+      "id": "EV-002",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-002-saved-page.png",
+      "caption": "Saved page reached via keyboard activation",
+      "page_url": "http://localhost:3000/#/saved",
+      "captured_at": "2026-11-02T13:19:00+08:00",
+      "related_check_ids": ["CHECK-003"],
+      "related_finding_ids": ["QA-001"]
+    },
+    {
+      "id": "EV-003",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-003-sort-low-to-high-state.png",
+      "caption": "Low-to-high sort state",
+      "page_url": "http://localhost:3000/#/",
+      "captured_at": "2026-11-02T13:19:00+08:00",
+      "related_check_ids": ["CHECK-004"],
+      "related_finding_ids": ["QA-002"]
+    },
+    {
+      "id": "EV-004",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-004-detail-reservation-cta.png",
+      "caption": "Hotel detail and reservation CTA",
+      "page_url": "http://localhost:3000/#/hotel/the-anda",
+      "captured_at": "2026-11-02T13:19:00+08:00",
+      "related_check_ids": ["CHECK-006", "CHECK-008"],
+      "related_finding_ids": ["QA-001"]
+    },
+    {
+      "id": "EV-005",
+      "type": "screenshot",
+      "path": "evidence/screenshots/SHOT-005-home-mobile.png",
+      "caption": "Mobile viewport sample",
+      "page_url": "http://localhost:3000/#/",
+      "captured_at": "2026-11-02T13:20:00+08:00",
+      "related_check_ids": ["CHECK-009"],
+      "related_finding_ids": []
+    },
+    {
+      "id": "EV-006",
+      "type": "log",
+      "path": "execution-log.md",
+      "caption": "Tool-observed click timeout failures",
+      "page_url": "http://localhost:3000/",
+      "captured_at": null,
+      "related_check_ids": ["CHECK-002", "CHECK-005", "CHECK-007"],
+      "related_finding_ids": ["QA-001"]
+    }
+  ],
+  "limitations": [
+    "Short exploratory sample; not all finite options were executed.",
+    "No full network payload export was captured.",
+    "Bookings route content was not exercised in this run."
+  ],
+  "next_checks": [
+    "Retest critical flows with mouse after pointer-hit fix.",
+    "Run full sort-option validation across all destination subsets.",
+    "Exercise declined payment and verify booking non-creation behavior."
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "run_id": "20261103-112729-a611",
+  "url": "http://localhost:3000",
+  "started_at": "2026-11-03T11:27:29.492+08:00",
+  "finished_at": "2026-11-03T11:29:09.358+08:00",
+  "elapsed_seconds": 100,
+  "mode": "quick",
+  "environment": "Chrome DevTools MCP page, desktop viewport, authenticated guest session",
+  "access": "Automated sign-in with provided test guest account; synthetic record creation permitted",
+  "assessment_status": "partial",
+  "evidence_status": "partial",
+  "verdict": "Two functional defects were confirmed in core discovery flows: pool filter behavior and hotel card CTA routing.",
+  "coverage": [
+    {
+      "id": "CHECK-001",
+      "feature": "Authenticated homepage baseline",
+      "input": "Load / with active guest session",
+      "expected": "Home discovery surface renders and signed-in navigation is visible",
+      "expected_basis": "Visible product IA and authenticated nav elements",
+      "actual": "Homepage rendered with hero, search form, cards, and signed-in nav including Sign out",
+      "outcome": "pass",
+      "finding_ids": [],
+      "evidence": ["EV-005"]
+    },
+    {
+      "id": "CHECK-002",
+      "feature": "Pool filter narrows stays",
+      "input": "Click 'With a pool' chip on collection list",
+      "expected": "Results list should contain only stays labelled with swimming pool",
+      "expected_basis": "Filter label and standard faceted-search behavior",
+      "actual": "Chip became pressed and API called with pool=true, but list still contains stays labelled 'No swimming pool'",
+      "outcome": "fail",
+      "finding_ids": ["QA-001"],
+      "evidence": ["EV-001", "EV-002"]
+    },
+    {
+      "id": "CHECK-003",
+      "feature": "Primary stay title link routing",
+      "input": "Click 'The Anda' title link from first card",
+      "expected": "Navigates to /#/hotel/the-anda",
+      "expected_basis": "Link URL target in card metadata",
+      "actual": "Navigated to /#/hotel/the-anda as expected",
+      "outcome": "pass",
+      "finding_ids": [],
+      "evidence": ["EV-004"]
+    },
+    {
+      "id": "CHECK-004",
+      "feature": "Secondary CTA routing on The Anda card",
+      "input": "Click first card CTA 'Explore stay ↗'",
+      "expected": "Navigates to same stay as card (The Anda)",
+      "expected_basis": "Card consistency: title/link and CTA should route to same listing",
+      "actual": "Navigated to /#/hotel/serena-villas while card is The Anda",
+      "outcome": "fail",
+      "finding_ids": ["QA-002"],
+      "evidence": ["EV-003", "EV-004"]
+    },
+    {
+      "id": "CHECK-005",
+      "feature": "End-to-end booking completion",
+      "input": "Create booking through checkout",
+      "expected": "Booking persists and appears in My bookings with correct totals",
+      "expected_basis": "Core booking flow requirement",
+      "actual": "Not exercised in this sampled quick run",
+      "outcome": "not_tested",
+      "finding_ids": [],
+      "evidence": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-001",
+      "title": "Pool filter does not narrow results",
+      "status": "confirmed",
+      "category": "Functional",
+      "severity": "high",
+      "severity_rationale": "Users searching for pool stays are shown non-pool properties, causing incorrect booking choices.",
+      "priority": "P1",
+      "priority_rationale": "Core discovery filter is misleading in primary browse journey.",
+      "impact": "Reduced trust in search filters and higher risk of wrong property selection.",
+      "url": "http://localhost:3000/",
+      "preconditions": ["Authenticated user on homepage"],
+      "steps": [
+        "Open homepage list section",
+        "Click 'With a pool' filter chip",
+        "Inspect resulting property cards"
+      ],
+      "expected": "Only properties with pool amenities remain visible",
+      "expected_basis": "Explicit filter semantics in UI",
+      "actual": "Properties labelled 'No swimming pool' remain visible after filter activation",
+      "comparison": "Filter control state changed to pressed and backend query used pool=true, but card set did not match",
+      "attempts": 2,
+      "reproduced": 2,
+      "network": ["GET /api/hotels?q=&sort=recommended&pool=true -> 200"],
+      "evidence": ["EV-001", "EV-002"],
+      "possible_causes": ["Filter state not applied when rendering card subset", "Backend pool parameter ignored or mismatched with UI attributes"],
+      "recommendation": "Align pool filter logic with displayed amenity flag and add assertion tests for negative amenities.",
+      "jira_url": null
+    },
+    {
+      "id": "QA-002",
+      "title": "The Anda card secondary CTA routes to Serena Villas",
+      "status": "confirmed",
+      "category": "Functional",
+      "severity": "high",
+      "severity_rationale": "User intent is redirected to a different property from the selected card.",
+      "priority": "P1",
+      "priority_rationale": "Direct conversion CTA misroutes on a top card in primary browsing surface.",
+      "impact": "Users may book the wrong listing and lose confidence in navigation integrity.",
+      "url": "http://localhost:3000/",
+      "preconditions": ["Homepage cards visible"],
+      "steps": [
+        "Locate The Anda card",
+        "Click its secondary CTA 'Explore stay ↗'",
+        "Observe destination page title and URL"
+      ],
+      "expected": "CTA destination matches The Anda card identity",
+      "expected_basis": "Card title link and CTA should represent same listing",
+      "actual": "Destination page is Serena Villas (/#/hotel/serena-villas)",
+      "comparison": "The Anda title link itself routes correctly to /#/hotel/the-anda",
+      "attempts": 2,
+      "reproduced": 2,
+      "network": [],
+      "evidence": ["EV-003", "EV-004"],
+      "possible_causes": ["Incorrect href binding for first card CTA template"],
+      "recommendation": "Bind CTA target from current card record and add link-consistency test per card.",
+      "jira_url": null
+    }
+  ],
+  "inventory": [
+    "Authenticated top navigation: Saved stays, My bookings, My account, Sign out",
+    "Homepage search form: destination, check-in/out, guests, Find a stay",
+    "Collection controls: amenity chip filter and sort selector",
+    "Property cards with primary link, save control, and secondary CTA",
+    "Hotel detail page with stay switcher and section tabs"
+  ],
+  "evidence": [
+    {
+      "id": "EV-001",
+      "type": "screenshot",
+      "path": "evidence/screenshots/QA-001-filter-pool-not-applied.png",
+      "caption": "With a pool chip is active while non-pool stays (e.g., Maison Vale, The Moss House) remain visible",
+      "page_url": "http://localhost:3000/",
+      "captured_at": "2026-11-03T11:28:16.000+08:00",
+      "capture_verified": true,
+      "related_ids": ["CHECK-002", "QA-001"]
+    },
+    {
+      "id": "EV-002",
+      "type": "technical",
+      "path": "evidence/technical/filter-api-and-results.txt",
+      "caption": "Snapshot and network excerpt showing pool=true request and conflicting visible labels",
+      "page_url": "http://localhost:3000/",
+      "captured_at": "2026-11-03T11:28:25.000+08:00",
+      "related_ids": ["CHECK-002", "QA-001"]
+    },
+    {
+      "id": "EV-003",
+      "type": "screenshot",
+      "path": "evidence/screenshots/QA-002-anda-cta-opens-serena.png",
+      "caption": "After clicking The Anda card CTA, destination page shows Serena Villas",
+      "page_url": "http://localhost:3000/#/hotel/serena-villas",
+      "captured_at": "2026-11-03T11:28:44.000+08:00",
+      "capture_verified": true,
+      "related_ids": ["CHECK-004", "QA-002"]
+    },
+    {
+      "id": "EV-004",
+      "type": "technical",
+      "path": "evidence/technical/anda-cta-routing.txt",
+      "caption": "Snapshot excerpt proving The Anda card title link and CTA link point to different destinations",
+      "page_url": "http://localhost:3000/",
+      "captured_at": "2026-11-03T11:28:58.000+08:00",
+      "related_ids": ["CHECK-003", "CHECK-004", "QA-002"]
+    },
+    {
+      "id": "EV-005",
+      "type": "technical",
+      "path": "evidence/run-notes.txt",
+      "caption": "Run timeline and authenticated baseline confirmation",
+      "page_url": "http://localhost:3000/",
+      "captured_at": "2026-11-03T11:27:29.000+08:00",
+      "related_ids": ["CHECK-001"]
+    }
+  ],
+  "observations": [
+    "Session was already authenticated on first load; Sign out control present.",
+    "No blocking console/runtime errors were required to reproduce findings."
+  ],
+  "limitations": [
+    "Quick sampled assessment only; checkout/payment/booking persistence flows were not executed.",
+    "No deep accessibility or performance profiling in this run."
+  ],
+  "next_checks": [
+    "Validate full booking flow totals and booking persistence in My bookings.",
+    "Run card link-integrity scan across all listing cards and breakpoints.",
+    "Add automated regression checks for filter-to-card consistency by amenity tags."
+  ]
+}

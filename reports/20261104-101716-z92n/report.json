@@ -1,0 +1,225 @@
+﻿{
+    "run_id":  "20261104-101716-z92n",
+    "url":  "http://localhost:3000",
+    "started_at":  "2026-11-04T10:17:16.6638341+08:00",
+    "finished_at":  "2026-11-04T10:20:30.6457042+08:00",
+    "elapsed_seconds":  194,
+    "mode":  "extensive",
+    "environment":  "Chrome 156 via Chrome DevTools MCP; viewport 1440x900; local environment on Windows",
+    "access":  "Authenticated with provided test guest account; synthetic create/cancel permitted",
+    "assessment_status":  "partial",
+    "evidence_status":  "partial",
+    "verdict":  "Two functional defects confirmed in sampled flows: broken property media due to server error and footer policy link routing to a 404 Not found page.",
+    "coverage":  [
+                     {
+                         "id":  "CHECK-001",
+                         "feature":  "Guest sign-in flow",
+                         "input":  "Email+password on /#/login",
+                         "expected":  "Successful sign-in returns user to discovery with account navigation visible.",
+                         "expected_basis":  "Standard auth workflow and in-page sign-in messaging.",
+                         "actual":  "Sign-in succeeded and header showed My account + Sign out.",
+                         "outcome":  "pass",
+                         "finding_ids":  [
+
+                                         ],
+                         "evidence":  [
+
+                                      ]
+                     },
+                     {
+                         "id":  "CHECK-002",
+                         "feature":  "Rimba Terrace property media render",
+                         "input":  "Open /#/hotel/rimba-terrace and load hero illustration",
+                         "expected":  "Property illustration loads normally without browser broken-image placeholder.",
+                         "expected_basis":  "Hotel detail page presents branded visual content for each stay.",
+                         "actual":  "Image area showed broken-image placeholder; network request /assets/missing-rimba.svg returned HTTP 500 (reproduced twice).",
+                         "outcome":  "fail",
+                         "finding_ids":  [
+                                             "QA-001"
+                                         ],
+                         "evidence":  [
+                                          "EV-001",
+                                          "EV-002"
+                                      ]
+                     },
+                     {
+                         "id":  "CHECK-003",
+                         "feature":  "Footer Booking policies navigation",
+                         "input":  "Click Booking policies link in footer from hotel page",
+                         "expected":  "Navigate to a valid booking policy page within app/site.",
+                         "expected_basis":  "Link label and footer IA indicate a reachable policy document.",
+                         "actual":  "Navigated to /booking-policies showing plain \"Not found\" page; document request returned HTTP 404 (reproduced twice).",
+                         "outcome":  "fail",
+                         "finding_ids":  [
+                                             "QA-002"
+                                         ],
+                         "evidence":  [
+                                          "EV-003",
+                                          "EV-004"
+                                      ]
+                     },
+                     {
+                         "id":  "CHECK-004",
+                         "feature":  "Reservation completion flow",
+                         "input":  "Proceed through checkout and payment simulation",
+                         "expected":  "Reservation can be created then cancelled under synthetic-data policy.",
+                         "expected_basis":  "Core end-to-end booking workflow objective.",
+                         "actual":  "Not executed in this sampled run after two high-confidence defects were confirmed per stop rule.",
+                         "outcome":  "not_tested",
+                         "finding_ids":  [
+
+                                         ],
+                         "evidence":  [
+
+                                      ]
+                     }
+                 ],
+    "findings":  [
+                     {
+                         "id":  "QA-001",
+                         "title":  "Rimba Terrace hero image fails to load (HTTP 500 asset)",
+                         "status":  "confirmed",
+                         "category":  "Functional",
+                         "severity":  "medium",
+                         "severity_rationale":  "Primary visual content on a property detail page is broken but core booking controls remain usable.",
+                         "priority":  "P2",
+                         "priority_rationale":  "Customer-facing quality issue that should be fixed soon, but not a full booking blocker.",
+                         "impact":  "Users see a broken image icon on the stay detail page, reducing trust and merchandising quality.",
+                         "url":  "http://localhost:3000/#/hotel/rimba-terrace",
+                         "preconditions":  [
+                                               "Signed in as guest user (also reproducible while signed out)."
+                                           ],
+                         "steps":  [
+                                       "Open Discover listing and navigate to Rimba Terrace detail page.",
+                                       "Observe the hero illustration area above the property heading.",
+                                       "Inspect network requests for image assets."
+                                   ],
+                         "expected":  "The Rimba Terrace illustration should render like other properties.",
+                         "expected_basis":  "Other stay pages load valid SVG assets; media is a core part of property presentation.",
+                         "actual":  "The illustration is broken, and GET /assets/missing-rimba.svg returns HTTP 500.",
+                         "comparison":  "Other property illustrations such as /assets/coast.svg and /assets/garden.svg return HTTP 200 and render.",
+                         "attempts":  2,
+                         "reproduced":  2,
+                         "network":  [
+                                         "GET /assets/missing-rimba.svg -\u003e 500 (reqid 18, reqid 22)"
+                                     ],
+                         "evidence":  [
+                                          "EV-001",
+                                          "EV-002"
+                                      ],
+                         "possible_causes":  [
+                                                 "Asset path points to a missing file or backend static-asset mapping for missing-rimba.svg is broken."
+                                             ],
+                         "recommendation":  "Replace/fix the missing-rimba asset reference and add an automated asset integrity check for hotel media links.",
+                         "jira_url":  null
+                     },
+                     {
+                         "id":  "QA-002",
+                         "title":  "Footer Booking policies link routes to 404 Not found",
+                         "status":  "confirmed",
+                         "category":  "Functional",
+                         "severity":  "high",
+                         "severity_rationale":  "A legal/policy navigation entry in global footer is unreachable, affecting compliance and user trust.",
+                         "priority":  "P1",
+                         "priority_rationale":  "Global footer defect with broad impact and potential policy disclosure risk.",
+                         "impact":  "Users cannot access booking policy content from the advertised footer link.",
+                         "url":  "http://localhost:3000/booking-policies",
+                         "preconditions":  [
+                                               "Any page where footer is visible."
+                                           ],
+                         "steps":  [
+                                       "Open a content page (example: Rimba Terrace hotel detail).",
+                                       "Click footer link: Booking policies.",
+                                       "Observe destination page content and network status."
+                                   ],
+                         "expected":  "Link should open a valid booking policy page with policy content.",
+                         "expected_basis":  "Footer information architecture explicitly advertises booking policy access.",
+                         "actual":  "Destination displays only \"Not found\" and document request returns HTTP 404.",
+                         "comparison":  "Main app routes (e.g., /#/hotel/rimba-terrace) resolve correctly, indicating this path is specifically broken.",
+                         "attempts":  2,
+                         "reproduced":  2,
+                         "network":  [
+                                         "GET /booking-policies -\u003e 404 (reqid 23, reqid 34)"
+                                     ],
+                         "evidence":  [
+                                          "EV-003",
+                                          "EV-004"
+                                      ],
+                         "possible_causes":  [
+                                                 "Route not implemented or static server missing this document endpoint."
+                                             ],
+                         "recommendation":  "Implement/restore the booking policies route or update footer href to the correct canonical policy URL.",
+                         "jira_url":  null
+                     }
+                 ],
+    "inventory":  [
+                      "Global header with auth-aware account actions (Discover, Saved stays, My bookings, My account).",
+                      "Discovery list with filters (All stays/With a pool) and sort control.",
+                      "Hotel detail page with pricing panel, promotion input, and reservation CTA.",
+                      "Global footer containing Booking policies link."
+                  ],
+    "evidence":  [
+                     {
+                         "id":  "EV-001",
+                         "type":  "screenshot",
+                         "path":  "evidence/screenshots/QA-001-rimba-image-missing.png",
+                         "caption":  "Rimba Terrace page shows broken image placeholder where hero illustration should render.",
+                         "page_url":  "http://localhost:3000/#/hotel/rimba-terrace",
+                         "captured_at":  "2026-11-04T10:20:30.6457042+08:00",
+                         "capture_verified":  true,
+                         "related_ids":  [
+                                             "CHECK-002",
+                                             "QA-001"
+                                         ]
+                     },
+                     {
+                         "id":  "EV-002",
+                         "type":  "technical-note",
+                         "path":  "evidence/technical/QA-001-missing-rimba-response.txt",
+                         "caption":  "Network evidence of missing-rimba asset request failing with HTTP 500.",
+                         "page_url":  "http://localhost:3000/#/hotel/rimba-terrace",
+                         "captured_at":  "2026-11-04T10:20:30.6457042+08:00",
+                         "related_ids":  [
+                                             "CHECK-002",
+                                             "QA-001"
+                                         ]
+                     },
+                     {
+                         "id":  "EV-003",
+                         "type":  "screenshot",
+                         "path":  "evidence/screenshots/QA-002-booking-policies-not-found.png",
+                         "caption":  "Booking policies navigation lands on plain Not found page.",
+                         "page_url":  "http://localhost:3000/booking-policies",
+                         "captured_at":  "2026-11-04T10:20:30.6457042+08:00",
+                         "capture_verified":  true,
+                         "related_ids":  [
+                                             "CHECK-003",
+                                             "QA-002"
+                                         ]
+                     },
+                     {
+                         "id":  "EV-004",
+                         "type":  "technical-note",
+                         "path":  "evidence/technical/QA-002-booking-policies-404-response.txt",
+                         "caption":  "Document request for /booking-policies returns HTTP 404.",
+                         "page_url":  "http://localhost:3000/booking-policies",
+                         "captured_at":  "2026-11-04T10:20:30.6457042+08:00",
+                         "related_ids":  [
+                                             "CHECK-003",
+                                             "QA-002"
+                                         ]
+                     }
+                 ],
+    "observations":  [
+                         "Login baseline succeeded with provided guest account and session persisted in header state."
+                     ],
+    "limitations":  [
+                        "Assessment intentionally stopped after two confirmed defects per focused sampled-run stopping rule.",
+                        "End-to-end reservation completion, cancellation lifecycle, accessibility audit, and performance profiling were not executed in this run."
+                    ],
+    "next_checks":  [
+                        "Validate and fix the /booking-policies destination, then verify footer link across all pages.",
+                        "Fix Rimba Terrace media asset mapping and recheck image loading on listing and detail pages.",
+                        "After fixes, run a follow-up flow: select stay -\u003e apply promo -\u003e continue to reservation -\u003e create and cancel synthetic booking."
+                    ]
+}

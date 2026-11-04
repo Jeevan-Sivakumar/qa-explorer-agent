@@ -1,0 +1,11 @@
+Observed defect: Pool filter does not narrow visible cards
+
+UI state:
+- 'With a pool' button is pressed.
+- Cards still include text labels 'No swimming pool' (e.g., Maison Vale, The Moss House, The George, Rimba Terrace).
+
+Network excerpt:
+- GET http://localhost:3000/api/hotels?q=&sort=recommended&pool=true -> 200
+
+Interpretation:
+- Backend call includes pool=true, but rendered results still contain non-pool entries.

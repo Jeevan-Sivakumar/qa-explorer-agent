@@ -1,0 +1,314 @@
+{
+  "run_id": "20261102-134212",
+  "url": "http://localhost:3000",
+  "started_at": "2026-11-02T13:42:12+08:00",
+  "finished_at": "2026-11-02T13:52:04+08:00",
+  "environment": "Windows, Chrome DevTools MCP visible browser, desktop viewport; authenticated using provided test account. No credentials stored in artifacts.",
+  "verdict": "Partial assessment with 2 confirmed backend defects and multiple verified passing flows.",
+  "assessment_status": "partial",
+  "coverage": [
+    {
+      "id": "CHECK-001",
+      "feature": "Landing page load",
+      "input": "Open http://localhost:3000",
+      "expected": "Home page and core navigation render.",
+      "actual": "Rendered successfully with discover, saved, bookings, sign in links and 8 stays.",
+      "outcome": "pass",
+      "evidence": ["EV-001"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-002",
+      "feature": "Authentication with provided credentials",
+      "input": "Email/password sign in from login page",
+      "expected": "User signs in and sees account nav state.",
+      "actual": "Sign in succeeded and My account/Sign out appeared.",
+      "outcome": "pass",
+      "evidence": ["EV-002"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-003",
+      "feature": "Destination filter: Penang",
+      "input": "Set destination to Penang",
+      "expected": "Penang stay results should load (for example The George).",
+      "actual": "Results unavailable banner shown with HTTP 503 reference.",
+      "outcome": "fail",
+      "evidence": ["EV-003", "EV-009", "EV-010"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-004",
+      "feature": "Destination filter: Langkawi",
+      "input": "Set destination to Langkawi",
+      "expected": "Only Langkawi properties displayed.",
+      "actual": "3 Langkawi stays displayed.",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-005",
+      "feature": "Sort low-to-high on Langkawi",
+      "input": "Set sort to Price: low to high",
+      "expected": "Ascending prices.",
+      "actual": "Observed ascending order: RM 520, RM 680, RM 890.",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-006",
+      "feature": "Sort low-to-high on all destinations",
+      "input": "All destinations + Price: low to high",
+      "expected": "Ascending prices across visible cards.",
+      "actual": "Observed ascending order beginning RM 350, 420, 520, 680, 780, 890, 1150, 1480.",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-007",
+      "feature": "Account profile section",
+      "input": "Open My account > Profile",
+      "expected": "Profile data loads successfully.",
+      "actual": "Profile loaded with name/email/currency/member year.",
+      "outcome": "pass",
+      "evidence": ["EV-005"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-008",
+      "feature": "Account travel preferences",
+      "input": "Open My account > Travel preferences",
+      "expected": "Preferences section loads.",
+      "actual": "HTTP 500 error banner shown with reference ID.",
+      "outcome": "fail",
+      "evidence": ["EV-006", "EV-009", "EV-010"],
+      "finding_ids": ["QA-002"]
+    },
+    {
+      "id": "CHECK-009",
+      "feature": "Account travel preferences retry",
+      "input": "Click Try again once",
+      "expected": "Section recovers and loads.",
+      "actual": "HTTP 500 repeated with new reference ID.",
+      "outcome": "fail",
+      "evidence": ["EV-006", "EV-009", "EV-010"],
+      "finding_ids": ["QA-002"]
+    },
+    {
+      "id": "CHECK-010",
+      "feature": "My bookings page",
+      "input": "Open My bookings",
+      "expected": "Bookings route loads and presents state.",
+      "actual": "Page loaded with empty-state message and Discover stays link.",
+      "outcome": "pass",
+      "evidence": ["EV-007"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-011",
+      "feature": "Saved stays page",
+      "input": "Open Saved stays",
+      "expected": "Saved route loads and presents state.",
+      "actual": "Page loaded with empty saved-state message and return link.",
+      "outcome": "pass",
+      "evidence": ["EV-008"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-012",
+      "feature": "Keyboard interaction on detail page",
+      "input": "Open The Anda detail and press Tab",
+      "expected": "Focusable controls are keyboard reachable.",
+      "actual": "Keyboard focus moved to breadcrumb Discover link on detail page.",
+      "outcome": "pass",
+      "evidence": ["EV-008"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-013",
+      "feature": "Mobile detail sample at 390x844",
+      "input": "Resize browser and sample detail page",
+      "expected": "Viewport resize and mobile inspection possible.",
+      "actual": "Resize blocked by DevTools protocol window-state constraint.",
+      "outcome": "blocked",
+      "evidence": [],
+      "evidence_missing_reason": "No screenshot captured because viewport resize command failed before mobile state could be reached.",
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-014",
+      "feature": "Synthetic booking/cancellation workflow",
+      "input": "Create and cancel own synthetic reservation",
+      "expected": "Flow can be executed if authorized.",
+      "actual": "Not executed; explicit yes/no authorization for synthetic transactions was not provided in follow-up response.",
+      "outcome": "blocked",
+      "evidence": [],
+      "evidence_missing_reason": "Skipped to respect authorization boundary.",
+      "finding_ids": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-001",
+      "title": "Penang destination filter returns service unavailable",
+      "status": "confirmed",
+      "category": "backend-availability",
+      "severity": "high",
+      "severity_rationale": "A primary destination filter option fails with a server error, blocking users from viewing that destination.",
+      "priority": "P1",
+      "priority_rationale": "Direct user-visible outage on a core browse flow; should be triaged in next fix window.",
+      "impact": "Users cannot browse Penang inventory despite destination being offered.",
+      "url": "http://localhost:3000/#/",
+      "preconditions": [
+        "Signed-in or signed-out home page",
+        "Destination selector visible"
+      ],
+      "steps": [
+        "Open home discover page.",
+        "Choose destination Penang.",
+        "Observe results area."
+      ],
+      "expected": "Penang properties load (for example The George visible in all-destinations list).",
+      "expected_basis": "Destination option exists and Penang property cards are present in unfiltered results.",
+      "actual": "Results unavailable alert appears with HTTP 503 and reference ID.",
+      "attempts": 1,
+      "reproduced": 1,
+      "confidence": "high",
+      "network": [
+        {
+          "reqid": 24,
+          "method": "GET",
+          "endpoint": "/api/hotels?q=Penang&sort=recommended&pool=false",
+          "status": 503,
+          "duration_ms": null,
+          "request_id": null
+        }
+      ],
+      "evidence": ["EV-003", "EV-009", "EV-010"],
+      "possible_causes": [
+        "Penang-filtered backend query path unavailable while general and other destination queries remain healthy.",
+        "Service dependency for destination-specific inventory endpoint degraded."
+      ],
+      "recommendation": "Triage backend availability for Penang filter path, add health checks for destination-specific queries, and fail over to graceful empty-state only when no inventory exists rather than 5xx.",
+      "jira_url": null
+    },
+    {
+      "id": "QA-002",
+      "title": "Account Travel preferences endpoint consistently returns internal server error",
+      "status": "confirmed",
+      "category": "backend-functional",
+      "severity": "high",
+      "severity_rationale": "Authenticated account feature is inaccessible due repeated 500 responses.",
+      "priority": "P1",
+      "priority_rationale": "Core authenticated account section broken for all observed attempts.",
+      "impact": "Users cannot view or manage travel preferences.",
+      "url": "http://localhost:3000/#/account/preferences",
+      "preconditions": [
+        "Signed-in user",
+        "Navigate to My account"
+      ],
+      "steps": [
+        "Open My account.",
+        "Click Travel preferences.",
+        "Observe error; click Try again once."
+      ],
+      "expected": "Travel preferences content loads.",
+      "expected_basis": "Account section link and retry action indicate supported feature.",
+      "actual": "HTTP 500 alert appears on initial load and retry, with distinct reference IDs.",
+      "attempts": 2,
+      "reproduced": 2,
+      "confidence": "high",
+      "network": [
+        {
+          "reqid": 36,
+          "method": "GET",
+          "endpoint": "/api/account/preferences",
+          "status": 500,
+          "duration_ms": null,
+          "request_id": null
+        },
+        {
+          "reqid": 37,
+          "method": "GET",
+          "endpoint": "/api/account/preferences",
+          "status": 500,
+          "duration_ms": null,
+          "request_id": null
+        }
+      ],
+      "evidence": ["EV-006", "EV-009", "EV-010"],
+      "possible_causes": [
+        "Server exception in preferences retrieval or serialization path.",
+        "Required profile/preferences record missing and not gracefully handled."
+      ],
+      "recommendation": "Inspect server logs using UI reference IDs, add null-safe handling for missing preference records, and add integration tests for account/preferences success and retry behavior.",
+      "jira_url": null
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-001",
+      "path": "evidence/screenshots/SHOT-001-overview-desktop.png",
+      "caption": "Baseline home overview"
+    },
+    {
+      "id": "EV-002",
+      "path": "evidence/screenshots/SHOT-002-authenticated-home.png",
+      "caption": "Authenticated home after successful sign in"
+    },
+    {
+      "id": "EV-003",
+      "path": "evidence/screenshots/SHOT-003-penang-unavailable-503.png",
+      "caption": "Penang filter unavailable with HTTP 503 alert"
+    },
+    {
+      "id": "EV-004",
+      "path": "evidence/screenshots/SHOT-004-all-destinations-price-asc.png",
+      "caption": "All-destinations list with ascending price sort"
+    },
+    {
+      "id": "EV-005",
+      "path": "evidence/screenshots/SHOT-005-account-profile.png",
+      "caption": "Account profile page loaded"
+    },
+    {
+      "id": "EV-006",
+      "path": "evidence/screenshots/SHOT-006-account-preferences-500.png",
+      "caption": "Travel preferences HTTP 500 with retry option"
+    },
+    {
+      "id": "EV-007",
+      "path": "evidence/screenshots/SHOT-007-bookings-empty.png",
+      "caption": "Bookings page empty state"
+    },
+    {
+      "id": "EV-008",
+      "path": "evidence/screenshots/SHOT-008-detail-keyboard-focus.png",
+      "caption": "Detail page with keyboard focus visible"
+    },
+    {
+      "id": "EV-009",
+      "path": "evidence/network/network-observations.md",
+      "caption": "Network request summary including 503 and 500 endpoints"
+    },
+    {
+      "id": "EV-010",
+      "path": "evidence/console/console-observations.md",
+      "caption": "Console error summary for 503 and 500 failures"
+    }
+  ],
+  "limitations": [
+    "Mobile 390x844 detail sample could not be captured because browser content resize failed with window-state protocol restriction.",
+    "Synthetic booking/cancellation flow was not executed because explicit transaction authorization was not confirmed in the follow-up response.",
+    "Network durations and response bodies were not exported in this run."
+  ],
+  "next_checks": [
+    "Re-run Penang filter after backend stabilization and verify destination-specific health checks.",
+    "Fix account/preferences backend error path and verify retry success.",
+    "After explicit authorization, execute full synthetic booking and cancellation lifecycle.",
+    "Capture dedicated mobile detail-page sample once viewport resizing is available."
+  ]
+}

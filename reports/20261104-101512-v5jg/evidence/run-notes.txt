@@ -1,0 +1,3 @@
+﻿Run started: 2026-11-04T10:15:19.5092084+08:00
+Run finished: 2026-11-04T10:15:54.7301283+08:00
+Result: Blocked on initial navigation to http://localhost:3000 (ERR_CONNECTION_REFUSED).

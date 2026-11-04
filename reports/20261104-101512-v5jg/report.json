@@ -1,0 +1,59 @@
+﻿{
+    "run_id":  "20261104-101512-v5jg",
+    "url":  "http://localhost:3000",
+    "started_at":  "2026-11-04T10:15:19.5092084+08:00",
+    "finished_at":  "2026-11-04T10:15:54.7301283+08:00",
+    "elapsed_seconds":  35,
+    "mode":  "extensive",
+    "environment":  "Chrome DevTools MCP, desktop target 1440x900 requested; browser launch blocked by connection refusal",
+    "access":  "Automated login intended with provided test credentials; synthetic record creation permitted",
+    "assessment_status":  "partial",
+    "evidence_status":  "partial",
+    "verdict":  "Assessment blocked: target application was unreachable at the provided URL (connection refused).",
+    "coverage":  [
+                     {
+                         "id":  "CHECK-001",
+                         "feature":  "Open target application at provided URL",
+                         "input":  "Navigate to http://localhost:3000",
+                         "expected":  "Application home or login page loads",
+                         "expected_basis":  "User-provided target URL for assessment",
+                         "actual":  "Browser returned net::ERR_CONNECTION_REFUSED",
+                         "outcome":  "blocked",
+                         "finding_ids":  [
+
+                                         ],
+                         "evidence":  [
+                                          "EV-001"
+                                      ]
+                     }
+                 ],
+    "findings":  [
+
+                 ],
+    "inventory":  [
+
+                  ],
+    "evidence":  [
+                     {
+                         "id":  "EV-001",
+                         "type":  "technical-note",
+                         "path":  "evidence/technical/connection-refused.txt",
+                         "caption":  "Initial navigation to target URL failed with net::ERR_CONNECTION_REFUSED",
+                         "page_url":  "http://localhost:3000",
+                         "captured_at":  "2026-11-04T10:15:54.7301283+08:00",
+                         "related_ids":  [
+                                             "CHECK-001"
+                                         ]
+                     }
+                 ],
+    "observations":  [
+                         "No product UI could be loaded, so no functional, UI, persistence, or validation workflows were executable."
+                     ],
+    "limitations":  [
+                        "Target service at http://localhost:3000 was not accepting connections during the run window."
+                    ],
+    "next_checks":  [
+                        "Start the target application/service and confirm the same URL opens in a local browser.",
+                        "Re-run the extensive sampled assessment once the endpoint is reachable."
+                    ]
+}

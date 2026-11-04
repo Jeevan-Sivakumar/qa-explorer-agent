@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA Assessment - 20261102-123746</title>
+  <style>
+    :root { --navy:#101d32; --blue:#225cce; --text:#202d40; --muted:#5d6b7e; --border:#dce3ec; --bg:#f3f5f9; --ok:#15613e; --bad:#ac2634; --warn:#875600; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.6 "Segoe UI", Arial, sans-serif; }
+    .sidebar { position:fixed; top:0; left:0; bottom:0; width:240px; background:var(--navy); color:#fff; padding:28px 20px; overflow:auto; }
+    .sidebar h2 { margin:0 0 16px; color:#fff; font-size:22px; }
+    .sidebar a { color:#d4deec; text-decoration:none; display:block; padding:7px 8px; border-radius:6px; }
+    .sidebar a:hover { background:#253651; }
+    main { margin-left:240px; padding:28px; max-width:1500px; }
+    section { background:#fff; border:1px solid var(--border); border-radius:12px; padding:22px; margin-bottom:18px; }
+    h1,h2,h3 { color:var(--navy); margin:0 0 12px; }
+    .muted { color:var(--muted); }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .card { border:1px solid var(--border); border-radius:8px; padding:12px; background:#fafbfd; }
+    .ok { border-left:4px solid var(--ok); }
+    .bad { border-left:4px solid var(--bad); }
+    .warn { border-left:4px solid var(--warn); }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { border:1px solid var(--border); padding:8px; vertical-align:top; text-align:left; }
+    th { background:#eef3fb; }
+    .tag { display:inline-block; border-radius:999px; padding:2px 8px; font-size:12px; border:1px solid var(--border); }
+    .pass { background:#eaf7ef; color:#0e5e3b; }
+    .fail { background:#fdeced; color:#8c1f2b; }
+    .small { font-size:13px; }
+    .gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    figure { margin:0; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff; }
+    figure img { width:100%; height:auto; display:block; }
+    figcaption { padding:8px; font-size:13px; color:var(--muted); }
+    .run-details dt { font-weight:700; }
+    .run-details dd { margin:0 0 8px; }
+    @media (max-width: 980px) {
+      .sidebar { position:static; width:auto; }
+      main { margin:0; }
+      .grid, .gallery { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>QA Explorer</h2>
+    <a href="#summary">Executive summary</a>
+    <a href="#coverage">Coverage matrix</a>
+    <a href="#findings">Findings</a>
+    <a href="#technical">Network and console</a>
+    <a href="#evidence">Evidence gallery</a>
+    <a href="#limits">Limitations</a>
+    <p class="small">Run ID: 20261102-123746</p>
+  </aside>
+
+  <main>
+    <section id="summary">
+      <h1>Assessment report</h1>
+      <p class="muted">Target: <a href="http://localhost:3000/">http://localhost:3000/</a></p>
+      <dl class="run-details">
+        <dt>Run ID</dt><dd>20261102-123746</dd>
+        <dt>Started</dt><dd>2026-11-02T12:37:46+08:00</dd>
+        <dt>Finished</dt><dd>2026-11-02T12:46:41+08:00</dd>
+        <dt>Environment</dt><dd>Windows, VS Code Playwright browser, desktop 1440x900 + mobile 390x844 sample</dd>
+        <dt>Assessment status</dt><dd>partial</dd>
+        <dt>Evidence status</dt><dd>complete</dd>
+      </dl>
+
+      <div class="grid">
+        <div class="card ok"><strong>Pass</strong><p>10 checks passed, including booking and cancellation lifecycle by keyboard path.</p></div>
+        <div class="card bad"><strong>Fail</strong><p>5 checks failed, dominated by mouse click inoperability and one sorting defect.</p></div>
+        <div class="card warn"><strong>Verdict</strong><p>Partial pass with major usability defects.</p></div>
+      </div>
+    </section>
+
+    <section id="coverage">
+      <h2>Coverage matrix</h2>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Feature / input</th><th>Expected</th><th>Actual</th><th>Outcome</th><th>Evidence</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CHECK-001</td><td>Landing page load</td><td>Home available</td><td>Loaded with nav and listing cards</td><td><span class="tag pass">pass</span></td><td>EV-001</td></tr>
+          <tr><td>CHECK-002</td><td>Click Saved stays (mouse)</td><td>Navigates</td><td>Pointer interception timeout</td><td><span class="tag fail">fail</span></td><td>EV-010</td></tr>
+          <tr><td>CHECK-004</td><td>Click demo guest (mouse)</td><td>Session starts</td><td>Pointer interception timeout</td><td><span class="tag fail">fail</span></td><td>EV-002</td></tr>
+          <tr><td>CHECK-006</td><td>With a pool filter</td><td>Pool-only list</td><td>Count changed 8 to 4</td><td><span class="tag pass">pass</span></td><td>EV-004</td></tr>
+          <tr><td>CHECK-007</td><td>Sort low to high</td><td>Ascending price</td><td>Non-ascending order observed</td><td><span class="tag fail">fail</span></td><td>EV-004</td></tr>
+          <tr><td>CHECK-010</td><td>Promo PAST20</td><td>Rejected with message</td><td>Alert + HTTP 422 reference</td><td><span class="tag pass">pass</span></td><td>EV-007, EV-008</td></tr>
+          <tr><td>CHECK-011</td><td>Continue reservation (mouse)</td><td>Proceed to checkout</td><td>Pointer interception timeout</td><td><span class="tag fail">fail</span></td><td>EV-010</td></tr>
+          <tr><td>CHECK-012</td><td>Complete booking</td><td>Booking appears in list</td><td>Confirmed booking shown in bookings</td><td><span class="tag pass">pass</span></td><td>EV-006</td></tr>
+          <tr><td>CHECK-013</td><td>Cancel reservation (mouse)</td><td>Open cancellation flow</td><td>Pointer interception timeout</td><td><span class="tag fail">fail</span></td><td>EV-010</td></tr>
+          <tr><td>CHECK-015</td><td>Mobile sample 390x844</td><td>Primary controls visible</td><td>Main nav + Find a stay visible</td><td><span class="tag pass">pass</span></td><td>EV-005</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="findings">
+      <h2>Confirmed findings</h2>
+
+      <article class="card bad">
+        <h3>QA-001: Mouse clicks fail on multiple primary controls due pointer interception</h3>
+        <p><strong>Severity:</strong> high</p>
+        <p><strong>Impact:</strong> Mouse users may be blocked from login, reservation progression, and cancellation.</p>
+        <p><strong>Reproduction summary:</strong> Clicking `Saved stays`, `Continue as demo guest`, `Continue to reservation`, and `Cancel reservation` repeatedly timed out with interception by overlapping elements. Keyboard activation on the same controls was often successful.</p>
+        <p><strong>Attempts/reproduced:</strong> 6 / 6</p>
+        <p><strong>Evidence:</strong> EV-002, EV-003, EV-006, EV-010</p>
+      </article>
+
+      <article class="card warn">
+        <h3>QA-002: Price ascending sort does not order prices ascending</h3>
+        <p><strong>Severity:</strong> medium</p>
+        <p><strong>Impact:</strong> Price sorting may mislead selection decisions.</p>
+        <p><strong>Observed:</strong> Under `Price: low to high`, order included RM 890 ahead of RM 680 and RM 780.</p>
+        <p><strong>Evidence:</strong> EV-004</p>
+      </article>
+    </section>
+
+    <section id="technical">
+      <h2>Network and console observations</h2>
+      <p>Invalid promo `PAST20` produced a user-visible HTTP 422 validation response with reference IDs and a console error: `Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)`.</p>
+      <p class="small">See: evidence/network/network-observations.md and evidence/console/console-observations.md</p>
+    </section>
+
+    <section id="evidence">
+      <h2>Evidence gallery</h2>
+      <p class="small">This report references relative image files; keep the evidence folder with this HTML.</p>
+      <div class="gallery">
+        <figure>
+          <img src="evidence/screenshots/SHOT-001-overview-desktop.png" alt="Desktop home overview">
+          <figcaption>EV-001: Desktop home overview</figcaption>
+        </figure>
+        <figure>
+          <img src="evidence/screenshots/SHOT-002-login-page.png" alt="Login page">
+          <figcaption>EV-002: Login page with demo CTA</figcaption>
+        </figure>
+        <figure>
+          <img src="evidence/screenshots/SHOT-004-pool-filter-sort-asc.png" alt="Pool filtered and sorted list">
+          <figcaption>EV-004: Pool filter and price-sort state</figcaption>
+        </figure>
+        <figure>
+          <img src="evidence/screenshots/SHOT-005-home-mobile.png" alt="Mobile home viewport">
+          <figcaption>EV-005: Mobile sample at 390x844</figcaption>
+        </figure>
+        <figure>
+          <img src="evidence/screenshots/SHOT-006-bookings-cancelled.png" alt="Cancelled booking state">
+          <figcaption>EV-006: Cancelled booking and refund state</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="limits">
+      <h2>Limitations and next checks</h2>
+      <ul>
+        <li>Assessment duration was shorter than the default 30-minute budget.</li>
+        <li>Destination/guest combinations and declined-payment scenario were not exercised.</li>
+        <li>Full raw request/response export was not captured.</li>
+      </ul>
+      <ol>
+        <li>Retest all core mouse interactions after hit-target fix.</li>
+        <li>Re-verify all sort modes and destination combinations.</li>
+        <li>Exercise declined payment and receipt/policies/account routes.</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

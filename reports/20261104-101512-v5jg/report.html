@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QA Report - 20261104-101512-v5jg</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--navy:#101d32;--blue:#225cce;--text:#202d40;--muted:#5d6b7e;--border:#dce3ec;--pass:#1f9d57;--fail:#c0392b;--blocked:#b7791f}
+*{box-sizing:border-box} body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text)}
+.layout{display:grid;grid-template-columns:238px 1fr;min-height:100vh}
+.side{background:var(--navy);color:#fff;padding:20px}
+.side h1{font-size:18px;margin:0 0 8px} .side p{color:#c8d3e6;font-size:13px;line-height:1.4}
+.main{padding:20px;display:grid;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.metric{border:1px solid var(--border);border-radius:10px;padding:12px}
+.metric h3{margin:0 0 6px;font-size:14px;color:var(--muted)} .metric p{margin:0;font-size:24px;font-weight:700}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:600}
+.badge.blocked{background:#fff4dd;color:var(--blocked);border:1px solid #efd9aa}
+.table{width:100%;border-collapse:collapse} .table th,.table td{padding:10px;border-bottom:1px solid var(--border);text-align:left;font-size:14px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}.grid{grid-template-columns:1fr}}
+@media print {.side{display:none}.layout{grid-template-columns:1fr}.main{padding:0}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="side">
+<h1>Sampled QA Assessment</h1>
+<p>Run ID: 20261104-101512-v5jg</p>
+<p>Mode: Extensive</p>
+<p>Status: Partial (blocked)</p>
+</aside>
+<main class="main">
+<section class="card">
+<h2>Executive Summary</h2>
+<p>Assessment was blocked at entry: the target URL returned connection refused, so product workflows could not be exercised.</p>
+<div class="grid">
+<div class="metric"><h3>Passed checks</h3><p>0</p></div>
+<div class="metric"><h3>Failed checks</h3><p>0</p></div>
+<div class="metric"><h3>Blocked checks</h3><p>1</p></div>
+<div class="metric"><h3>Not tested</h3><p>0</p></div>
+<div class="metric"><h3>Confirmed defects</h3><p>0</p></div>
+<div class="metric"><h3>Evidence status</h3><p>Partial</p></div>
+</div>
+</section>
+<section class="card">
+<h2>Checks</h2>
+<table class="table">
+<thead><tr><th>ID</th><th>Scenario</th><th>Expected</th><th>Actual</th><th>Outcome</th></tr></thead>
+<tbody>
+<tr><td>CHECK-001</td><td>Open target application</td><td>App page loads at provided URL</td><td>net::ERR_CONNECTION_REFUSED</td><td><span class="badge blocked">Blocked</span></td></tr>
+</tbody>
+</table>
+</section>
+<section class="card">
+<h2>Limitations</h2>
+<ul>
+<li>Target service at http://localhost:3000 was not accepting connections during the run window.</li>
+</ul>
+<p>Source of truth: <a href="report.json">report.json</a></p>
+</section>
+</main>
+</div>
+</body>
+</html>

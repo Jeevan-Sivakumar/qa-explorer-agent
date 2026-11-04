@@ -1,0 +1,13 @@
+Observed defect: The Anda card CTA routes to Serena Villas
+
+Snapshot excerpt on homepage card:
+- The Anda title link: /#/hotel/the-anda
+- The Anda card secondary CTA 'Explore stay ↗': /#/hotel/serena-villas
+
+Reproduction:
+1) Click 'Explore stay ↗' on The Anda card.
+2) Destination URL becomes /#/hotel/serena-villas.
+3) Page heading shows 'Serena Villas'.
+
+Comparison:
+- Clicking The Anda title link routes correctly to /#/hotel/the-anda.

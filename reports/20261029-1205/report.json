@@ -1,0 +1,165 @@
+{
+  "run_id": "20261029-1205",
+  "url": "http://localhost:3000",
+  "started_at": "2026-10-29T11:55:00+08:00",
+  "finished_at": "2026-10-29T12:09:00+08:00",
+  "environment": "Chrome DevTools MCP (Chromium 156 UA), desktop 1440x900 and mobile 390x844, normal network/CPU, anonymous user session only.",
+  "verdict": "Core anonymous browse flows passed; one confirmed functional availability failure on Penang destination listing (HTTP 503).",
+  "coverage": [
+    {
+      "id": "CHECK-001",
+      "feature": "Home page load",
+      "input": "GET /#/ anonymous",
+      "expected": "Homepage and listing controls load",
+      "actual": "Homepage and catalog rendered",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-002",
+      "feature": "Discover navigation",
+      "input": "Top nav Discover link",
+      "expected": "Discover route reachable",
+      "actual": "Navigated to /#/",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-003",
+      "feature": "Anonymous save guard",
+      "input": "Save Serena Villas",
+      "expected": "Require sign-in",
+      "actual": "Redirected to /#/login",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-004",
+      "feature": "Anonymous booking guard",
+      "input": "Continue to reservation from hotel page",
+      "expected": "Require sign-in",
+      "actual": "Redirected to /#/login",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-005",
+      "feature": "Login required fields",
+      "input": "Blank login submit",
+      "expected": "Validation feedback shown",
+      "actual": "Browser required-field alert shown",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-006",
+      "feature": "Destination filter success path",
+      "input": "Destination=Langkawi, sort=price, pool=true",
+      "expected": "Matching stays list returned",
+      "actual": "3 stays rendered; API 200",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-007",
+      "feature": "Sorting behavior",
+      "input": "Sort by price low to high",
+      "expected": "Ascending price order",
+      "actual": "520 -> 680 -> 890",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-008",
+      "feature": "Destination filter Penang",
+      "input": "Destination=Penang, sort=price, pool=true",
+      "expected": "Penang stays list returned",
+      "actual": "Results unavailable alert; API 503",
+      "outcome": "fail",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-009",
+      "feature": "Expired promotion handling",
+      "input": "Coupon PAST20",
+      "expected": "Reject expired code with clear feedback",
+      "actual": "Inline alert + API 422 with request id shown",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-010",
+      "feature": "Mobile responsive sample",
+      "input": "390x844 viewport",
+      "expected": "Core controls visible and usable",
+      "actual": "Nav, filters, cards rendered and interactive",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-011",
+      "feature": "Keyboard focus sample",
+      "input": "Tab navigation on discover page",
+      "expected": "Visible focus and focusable controls",
+      "actual": "Focus moved through main nav links",
+      "outcome": "pass",
+      "evidence": []
+    },
+    {
+      "id": "CHECK-012",
+      "feature": "Authenticated booking management",
+      "input": "Sign-in dependent flows",
+      "expected": "Create/manage bookings and saved stays",
+      "actual": "Not executable without credentials",
+      "outcome": "blocked",
+      "evidence": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-001",
+      "title": "Penang destination query returns unavailable state (HTTP 503)",
+      "status": "confirmed",
+      "category": "functional",
+      "severity": "medium",
+      "impact": "Users cannot browse Penang destination inventory in the discover flow, reducing bookable destination coverage.",
+      "url": "http://localhost:3000/#/",
+      "preconditions": [
+        "Anonymous discover page open",
+        "Destination, pool filter, and sort controls visible"
+      ],
+      "steps": [
+        "Set destination to Penang",
+        "Keep pool=true and sort=price low to high",
+        "Observe list and API response"
+      ],
+      "expected": "Destination filter should return matching Penang stays data or a recoverable fallback.",
+      "expected_basis": "UI destination filter semantics and successful responses for the same flow with other destinations.",
+      "actual": "UI shows results unavailable and returns HTTP 503 from hotels listing API.",
+      "comparison": "Equivalent Langkawi query returned 200 and rendered 3 stays.",
+      "attempts": 1,
+      "reproduced": 1,
+      "confidence": "high",
+      "network": [
+        {
+          "method": "GET",
+          "path": "/api/hotels?q=Penang&sort=price&pool=true",
+          "status": 503,
+          "duration_ms": null,
+          "request_id": "2417b319-055b-42d9-a064-d976aa643058"
+        }
+      ],
+      "evidence": [],
+      "jira_url": null
+    }
+  ],
+  "limitations": [
+    "No authenticated test account was supplied; signed-in flows are blocked.",
+    "DevTools screenshot file-save paths were restricted in this session, so evidence files were not persisted to disk."
+  ],
+  "next_checks": [
+    "Retest Penang with pool=false and alternate sort modes to isolate whether the outage is destination-only or condition-specific.",
+    "Run full authenticated booking journey once credentials are available.",
+    "Collect at least three comparable timing samples for hotels and quote endpoints."
+  ]
+}

@@ -1,0 +1,11 @@
+# Credentials and private local setup must not be committed.
+.env
+.env.*
+!.env.example
+private/
+# Local MCP configuration may contain credentials; reuse user settings instead.
+.vscode/
+__pycache__/
+*.pyc
+# Reports and screenshots are intentionally NOT ignored.
+# Review/redact them before choosing which evidence to commit.

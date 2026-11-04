@@ -1,0 +1,12 @@
+{
+  "run_id": "replace-with-actual-run-id",
+  "url": "replace-with-target-url",
+  "started_at": null,
+  "finished_at": null,
+  "environment": "Record actual Chrome version, viewport and login scope, never credentials.",
+  "verdict": "Not executed. This file is a shape reference only.",
+  "assessment_status": "partial",
+  "coverage": [],
+  "findings": [],
+  "limitations": []
+}

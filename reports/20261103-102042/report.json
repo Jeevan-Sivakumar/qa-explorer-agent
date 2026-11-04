@@ -1,0 +1,273 @@
+{
+  "run_id": "20261103-102042",
+  "url": "http://localhost:3000",
+  "started_at": "2026-11-03T10:20:42+08:00",
+  "finished_at": "2026-11-03T10:23:36+08:00",
+  "environment": "Windows, Chrome DevTools MCP visible browser, authenticated session already present on load, desktop plus mobile 390x844 sample.",
+  "verdict": "Partial assessment with 3 confirmed defects in destination filtering, account preferences, and listing asset delivery.",
+  "coverage": [
+    {
+      "id": "CHECK-001",
+      "feature": "Landing page load",
+      "input": "Open http://localhost:3000",
+      "expected": "Home renders with primary navigation and listing cards.",
+      "actual": "Rendered successfully; 9 listing cards visible.",
+      "outcome": "pass",
+      "evidence": ["EV-001"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-002",
+      "feature": "Destination filter: Penang",
+      "input": "Set destination to Penang",
+      "expected": "Penang listings load (including The George).",
+      "actual": "Results unavailable alert shown with HTTP 503 reference.",
+      "outcome": "fail",
+      "evidence": ["EV-002", "EV-006", "EV-007"],
+      "finding_ids": ["QA-001"]
+    },
+    {
+      "id": "CHECK-003",
+      "feature": "Destination filter recovery",
+      "input": "Set destination back to All destinations",
+      "expected": "Listings recover.",
+      "actual": "Recovered to full listing set.",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-004",
+      "feature": "Account profile page",
+      "input": "Open My account > Profile",
+      "expected": "Profile details load.",
+      "actual": "Profile loaded with account details.",
+      "outcome": "pass",
+      "evidence": ["EV-004"],
+      "finding_ids": []
+    },
+    {
+      "id": "CHECK-005",
+      "feature": "Account travel preferences",
+      "input": "Open My account > Travel preferences",
+      "expected": "Preferences content loads.",
+      "actual": "Error alert shows HTTP 500 with reference ID.",
+      "outcome": "fail",
+      "evidence": ["EV-003", "EV-006", "EV-007"],
+      "finding_ids": ["QA-002"]
+    },
+    {
+      "id": "CHECK-006",
+      "feature": "Travel preferences retry",
+      "input": "Click Try again once",
+      "expected": "Preferences load on retry.",
+      "actual": "HTTP 500 repeats with new reference ID.",
+      "outcome": "fail",
+      "evidence": ["EV-003", "EV-006"],
+      "finding_ids": ["QA-002"]
+    },
+    {
+      "id": "CHECK-007",
+      "feature": "Rimba Terrace card image",
+      "input": "Inspect listing card image request",
+      "expected": "Card image asset request succeeds.",
+      "actual": "Asset request /assets/missing-rimba.svg returns HTTP 500.",
+      "outcome": "fail",
+      "evidence": ["EV-004", "EV-006", "EV-007"],
+      "finding_ids": ["QA-003"]
+    },
+    {
+      "id": "CHECK-008",
+      "feature": "Mobile home sample",
+      "input": "Resize to 390x844 and review home",
+      "expected": "Primary controls remain visible.",
+      "actual": "Main controls remained visible in mobile sample.",
+      "outcome": "pass",
+      "evidence": ["EV-005"],
+      "finding_ids": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-001",
+      "title": "Penang destination search path returns HTTP 503",
+      "status": "confirmed",
+      "category": "backend-availability",
+      "severity": "high",
+      "severity_rationale": "Core browse filter option fails and blocks destination results.",
+      "priority": "P1",
+      "priority_rationale": "Direct user-visible outage in a primary discovery flow.",
+      "impact": "Users cannot browse Penang stays when selecting destination filter.",
+      "url": "http://localhost:3000/#/",
+      "preconditions": [
+        "Home discover page open",
+        "Destination combobox available"
+      ],
+      "steps": [
+        "Select destination Penang from combobox.",
+        "Observe results panel and alert."
+      ],
+      "expected": "Penang stays are shown.",
+      "expected_basis": "Penang is provided as a selectable destination and appears in all-destinations listing.",
+      "actual": "Results unavailable alert with HTTP 503 and reference shown.",
+      "attempts": 1,
+      "reproduced": 1,
+      "confidence": "high",
+      "network": [
+        {
+          "method": "GET",
+          "endpoint": "/api/hotels?q=Penang&sort=recommended&pool=false",
+          "status": 503,
+          "duration_ms": null,
+          "request_id": "reqid=14"
+        }
+      ],
+      "evidence": ["EV-002", "EV-006", "EV-007"],
+      "possible_causes": [
+        "Destination-specific backend dependency for Penang is unavailable.",
+        "Filter query path is not handling Penang data source failures gracefully."
+      ],
+      "recommendation": "Investigate backend availability for destination-specific query path and add graceful fallback behavior for transient failures.",
+      "jira_url": null
+    },
+    {
+      "id": "QA-002",
+      "title": "Account Travel preferences endpoint fails on load and retry",
+      "status": "confirmed",
+      "category": "backend-functional",
+      "severity": "high",
+      "severity_rationale": "Authenticated account section is unavailable due repeated server errors.",
+      "priority": "P1",
+      "priority_rationale": "Breaks expected account functionality for signed-in users.",
+      "impact": "Users cannot view or update travel preferences.",
+      "url": "http://localhost:3000/#/account/preferences",
+      "preconditions": [
+        "Signed-in state",
+        "My account page available"
+      ],
+      "steps": [
+        "Open My account.",
+        "Open Travel preferences tab.",
+        "Click Try again once."
+      ],
+      "expected": "Preferences content loads on initial request or retry.",
+      "expected_basis": "Feature is explicitly linked in account sections and includes retry affordance.",
+      "actual": "HTTP 500 shown on initial load and retry with unique references.",
+      "attempts": 2,
+      "reproduced": 2,
+      "confidence": "high",
+      "network": [
+        {
+          "method": "GET",
+          "endpoint": "/api/account/preferences",
+          "status": 500,
+          "duration_ms": null,
+          "request_id": "reqid=24"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/api/account/preferences",
+          "status": 500,
+          "duration_ms": null,
+          "request_id": "reqid=25"
+        }
+      ],
+      "evidence": ["EV-003", "EV-006", "EV-007"],
+      "possible_causes": [
+        "Unhandled server exception during preferences read operation.",
+        "Missing preference record path lacks null-safe handling."
+      ],
+      "recommendation": "Inspect server logs using UI reference IDs, add resilient handling for missing preference data, and cover retry path in integration tests.",
+      "jira_url": null
+    },
+    {
+      "id": "QA-003",
+      "title": "Rimba Terrace listing image asset path returns HTTP 500",
+      "status": "confirmed",
+      "category": "content-delivery",
+      "severity": "medium",
+      "severity_rationale": "Visual content degradation impacts listing quality but does not fully block booking flows.",
+      "priority": "P2",
+      "priority_rationale": "User-facing quality issue with direct asset delivery failure.",
+      "impact": "Rimba Terrace card renders with a failed image request, reducing trust and polish.",
+      "url": "http://localhost:3000/#/",
+      "preconditions": [
+        "Discover listing loaded"
+      ],
+      "steps": [
+        "Load discover page with all destinations.",
+        "Inspect Rimba Terrace card image request in network logs."
+      ],
+      "expected": "Image request succeeds with valid asset.",
+      "expected_basis": "Listing cards should provide valid imagery like other cards.",
+      "actual": "GET /assets/missing-rimba.svg returned HTTP 500.",
+      "attempts": 1,
+      "reproduced": 1,
+      "confidence": "high",
+      "network": [
+        {
+          "method": "GET",
+          "endpoint": "/assets/missing-rimba.svg",
+          "status": 500,
+          "duration_ms": null,
+          "request_id": "reqid=13"
+        }
+      ],
+      "evidence": ["EV-004", "EV-006", "EV-007"],
+      "possible_causes": [
+        "Incorrect asset path configured for Rimba Terrace.",
+        "Missing static file or broken static asset mapping in server."
+      ],
+      "recommendation": "Correct listing image path and add static-asset validation checks in CI to detect missing media files.",
+      "jira_url": null
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-001",
+      "path": "evidence/screenshots/SHOT-001-overview-desktop.png",
+      "caption": "Desktop overview at run start"
+    },
+    {
+      "id": "EV-002",
+      "path": "evidence/screenshots/SHOT-002-penang-filter.png",
+      "caption": "Penang destination selected showing HTTP 503 alert"
+    },
+    {
+      "id": "EV-003",
+      "path": "evidence/screenshots/SHOT-003-account-preferences-500.png",
+      "caption": "Account preferences error state with HTTP 500"
+    },
+    {
+      "id": "EV-004",
+      "path": "evidence/screenshots/SHOT-004-home-broken-rimba-image.png",
+      "caption": "Home listing containing Rimba Terrace card"
+    },
+    {
+      "id": "EV-005",
+      "path": "evidence/screenshots/SHOT-005-home-mobile-390x844.png",
+      "caption": "Mobile home sample at 390x844"
+    },
+    {
+      "id": "EV-006",
+      "path": "evidence/network/network-observations.md",
+      "caption": "Network failures summary with request IDs and statuses"
+    },
+    {
+      "id": "EV-007",
+      "path": "evidence/console/console-observations.md",
+      "caption": "Console error summary for 500 and 503 failures"
+    }
+  ],
+  "limitations": [
+    "Assessment duration was limited and not exhaustive across all destinations and sort permutations.",
+    "No synthetic reservation create/cancel flow executed in this pass.",
+    "Network response bodies and timing metrics were not exported by the current tool output."
+  ],
+  "next_checks": [
+    "Re-test Penang filter after backend fix and verify destination parity.",
+    "Verify account preferences success path and retry recovery.",
+    "Validate static asset integrity for all listing cards.",
+    "Run authenticated end-to-end booking and cancellation synthetic flow in follow-up pass."
+  ]
+}
