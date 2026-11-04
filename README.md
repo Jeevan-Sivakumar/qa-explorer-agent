@@ -191,28 +191,8 @@ reports/<run-id>/
 └── evidence/
 ```
 
-Open `report.html` to review:
+Open `report.html` to review the generated report.
 
-- Confirmed defects
-- Bug type
-- Severity and proposed priority
-- User or system impact
-- Reproduction steps
-- Expected and actual behavior
-- Screenshots and technical evidence
-- Recommended next action
-
-If local screenshots do not load correctly, run:
-
-```powershell
-py -m http.server 5500
-```
-
-Then open:
-
-```text
-http://127.0.0.1:5500/reports/<run-id>/report.html
-```
 
 ---
 
@@ -220,14 +200,7 @@ http://127.0.0.1:5500/reports/<run-id>/report.html
 
 Atlassian MCP is not required for testing or report generation.
 
-After reviewing the report, selected confirmed findings can optionally be created as Jira tickets:
-
-```text
-Create Jira tickets for QA-001 and QA-003 in project ABC. Check for duplicates first and return the created ticket URLs.
-```
-
-Always review findings before creating tickets.
-
+You can configure an Atlassian MCP server in VS Code to connect QA Explorer with Jira. After the assessment, it can use the confirmed findings in the report to create Jira tickets when needed.
 ---
 
 # Project Structure
