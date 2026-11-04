@@ -352,27 +352,9 @@ Press `Ctrl+C` in the terminal to stop the local server.
 - A suspected root cause remains a hypothesis unless supported by sufficient evidence.
 - Human review is required before sharing findings or creating tickets.
 
-## 8. Optional Jira ticket creation
 
-Atlassian MCP is not required for testing or report generation.
 
-After reviewing the report, the user may ask QA Explorer to publish selected findings. Example:
-
-```text
-Create Jira tickets only for QA-001 and QA-003 in project ABC. Check for duplicates first and return the created ticket URLs.
-```
-
-QA Explorer should:
-
-1. Create tickets only when explicitly requested.
-2. Publish only the selected confirmed findings.
-3. Check for likely duplicates when the available tools support it.
-4. Preserve reproduction steps, severity, priority, impact and evidence references.
-5. Record only ticket URLs actually returned by Jira.
-
-Never place Atlassian credentials inside the repository.
-
-## 9. Sharing reports safely
+## 8. Sharing reports safely
 
 Reports and screenshots can contain application data visible during testing.
 
@@ -392,7 +374,7 @@ reports/
 
 Ignoring the folder does not delete existing reports or remove files already committed.
 
-## 10. Troubleshooting
+## 9. Troubleshooting
 
 ### Chrome DevTools MCP is missing
 
